@@ -9,7 +9,7 @@ import com.google.common.collect.Table.Cell;
 
 public class GradientDescent 
 {
-	  static int MAX_ITER = 100;
+	  static int MAX_ITER = 10000000;
 	  static double LEARNING_RATE = 0.1;           
 	  
     static final String LABEL = "atheism";
@@ -43,7 +43,8 @@ public class GradientDescent
 	           {
 				   feature_matrix__train[z][q] = container_of_feature_vector[q];
 	           }
-			   outputs__train[z] = String.valueOf( cell.getColumnKey() ).equals(LABEL) ? 1.0 : 0.0;
+			   // use 1 and -1 not 0 and 1
+			   outputs__train[z] = String.valueOf( cell.getColumnKey() ).equals(LABEL) ? 1.0 : -1.0;
 	           
 	           z++;
 		   }
@@ -67,35 +68,124 @@ public class GradientDescent
 	      hypothesis = calculateHypothesis( theta, feature_matrix__train, p, globo_dict_size );
 
 	      // 2. Calculate the loss = h - y and maybe the squared cost (loss^2)/2m
-	      cost = hypothesis - outputs__train[p];
+	      //cost = hypothesis - outputs__train[p];
+	      cost = HingeLoss.deriv(hypothesis, outputs__train[p]);
 	      
 	      // 3. Calculate the gradient = X' * loss / m
 	      gradient = calculateGradent( theta, feature_matrix__train, p, globo_dict_size, cost, number_of_files__train);
 	      
+	      double[] temp = new double[ globo_dict_size + 1 ];//one for bias
+	      // populate temp to facilitate simultaneous update
+	      for (int i = 0; i < globo_dict_size; i++) 
+	      {
+	    	  temp[i] = theta[i] - (LEARNING_RATE * gradient[i] );
+	      }
+
 	      // 4. Update the parameters theta = theta - alpha * gradient
 	      for (int i = 0; i < globo_dict_size; i++) 
 	      {
-	    	  theta[i] = theta[i] - LEARNING_RATE * gradient[i];
+	    	  theta[i] = temp[i];
 	      }
-
+      
+		  //summation of squared error (error value for all instances)
+	      error += cost;
+	      
 	    }
 	    
-		//summation of squared error (error value for all instances)
-	    error += (cost*cost);	    
+
 	  
 	  /* Root Mean Squared Error */
-	  if (iteration < 10) 
-		  System.out.println("Iteration 0" + iteration + " : RMSE = " + Math.sqrt(  error/number_of_files__train  ) );
-	  else
-		  System.out.println("Iteration " + iteration + " : RMSE = " + Math.sqrt( error/number_of_files__train ) );
-	  //System.out.println( Arrays.toString( weights ) );
-	  
+	  //System.out.println("Iteration " + iteration + " : RMSE = " + Math.sqrt( error/number_of_files__train ) );
+	  System.out.println("Iteration " + iteration + " : RMSE = " + error);
+
 	  } 
-	  while(cost != 0 && iteration<=MAX_ITER);
+	  while( error != 0.0 );
+	
 
+	  
+	  
+	  
+      int number_of_files__test = test_freq_count_against_globo_dict.size();
+      double[][] feature_matrix__test = new double[ number_of_files__test ][ globo_dict_size ];
+       
+	   //i don't actually need this info, but something to clarify the output would be great
+	   String[] test_file_true_label = new String [ number_of_files__test ];
+	    
+	   int x = 0;
+	   for ( Cell< int[] , String , Integer > cell: test_freq_count_against_globo_dict.cellSet() )
+	   {			   
+		   int[] container_of_feature_vector__test = cell.getRowKey();
+		   //System.out.println( Arrays.toString( container_of_feature_vector ) );
+		   
+		   for (int q = 0; q < globo_dict_size; q++) 
+          {
+			   feature_matrix__test[x][q] = container_of_feature_vector__test[q];
+          }
+		   test_file_true_label[x] = (String)( cell.getColumnKey() );
+          
+          x++;
+	   }
+	   //System.out.println( Arrays.toString( outputs ) );
+	   System.out.println();
+	   
+	   
+	   double tp = 0.0;
+	   double fp = 0.0; 
+	   double tn = 0.0;
+	   double fn = 0.0;
+	   
+	  for (p = 0; p < number_of_files__test; p++) 
+	  {
+		  double predicted_class = calculateHypothesis( theta, feature_matrix__test, p, globo_dict_size );
+	      System.out.println("predicted class = " + predicted_class );
+	      
+	      int actual_class = ( test_file_true_label[p] ).equals(LABEL) ? 1 : -1;
+	      
+	      System.out.println( "actual class = " + actual_class );
+	      
+	      System.out.println( "actual class = " + test_file_true_label[p] );
+	      
+	      //System.out.println();
+	      
+	      if( actual_class == 1.0 && predicted_class == 1.0 )
+	    	  tp++;
+	      if( actual_class == 1.0 && predicted_class == -1.0 )
+	    	  fn++;
+	      if( actual_class == -1.0 && predicted_class == 1.0 )
+	    	  fp++;
+	      if( actual_class == -1.0 && predicted_class == -1.0 )
+	    	  tn++;   
+	  }
+	  
+	  System.out.println( "tp: " + tp );
+	  System.out.println( "fp: " + fp );
+	  System.out.println( "tn: " + tn );
+	  System.out.println( "fn: " + fn );
+	  System.out.println();
+	  
+	  double precision = tp / (tp + fp);
+	  System.out.println( "precision = " + precision );
+	  
+	  double recall = tp / (tp + fn);
+	  System.out.println( "recall = " + recall );
+	  
+	  double f_measure = ( 2 * ( precision * recall ) ) / ( precision + recall );
+	  System.out.println( "f_measure = " + f_measure );
+	  
+	  System.out.println();
+	  System.out.println();
 
-	}
-
+	  
+	  
+	  
+	  
+	  
+	  }
+	  
+	  
+	  
+	  
+	  
 	static double calculateHypothesis( double[] theta, double[][] feature_matrix, int file_index, int globo_dict_size )
 	{
 		double hypothesis = 0.0;
@@ -109,17 +199,19 @@ public class GradientDescent
 
 		 return hypothesis;
 	}
-
+	
+	// 3. Calculate the gradient = X' * loss / m
 	static double[] calculateGradent( double theta[], double[][] feature_matrix, int file_index, int globo_dict_size, double cost, int number_of_files__train)
 	{
 		double m = number_of_files__train;
 
-		double[] gradient = new double[ globo_dict_size];//one for bias?
+		double[] gradient = new double[ globo_dict_size + 1 ];//one for bias?
 		
-		for (int i = 0; i < gradient.length; i++) 
+		for (int i = 0; i < globo_dict_size; i++) 
 		{
 			gradient[i] = (1.0/m) * cost * feature_matrix[ file_index ][ i ] ;
 		}
+		gradient[ globo_dict_size ] = (1.0/m) * cost;
 		
 		return gradient;
 	}

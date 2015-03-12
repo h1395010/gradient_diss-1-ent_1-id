@@ -73,18 +73,18 @@ public class Main
 
 		
 		
-//		//Test
-//		for(int cycle = 0; cycle <= 1; cycle++)
-//		{			
-//			//get the test data
-//			String test_path = "/home/matthias/Workbench/SUTD/ISTD_50.570/assignments/data/test";
-//			//String test_path = "/home/matthias/Workbench/SUTD/ISTD_50.570/assignments/practice_data/data/test";
-//			File test_dict = new File( test_path + categories[cycle]);
-//
-//			EvaluateFiles.store_file_words_with_label( test_dict , GLOBO_DICT , test__list_of_file_words );	
-//		}
-//		
-//		EvaluateFiles.generate_word_frequency_count_struc( GLOBO_DICT, test__list_of_file_words, test_freq_count_against_globo_dict );
+		//Test
+		for(int cycle = 0; cycle <= 1; cycle++)
+		{			
+			//get the test data
+			//String test_path = "/home/matthias/Workbench/SUTD/ISTD_50.570/assignments/data/test";
+			String test_path = "/home/matthias/Workbench/SUTD/ISTD_50.570/assignments/practice_data/data/test";
+			File test_dict = new File( test_path + categories[cycle]);
+
+			EvaluateFiles.store_file_words_with_label( test_dict , GLOBO_DICT , test__list_of_file_words );	
+		}
+		
+		EvaluateFiles.generate_word_frequency_count_struc( GLOBO_DICT, test__list_of_file_words, test_freq_count_against_globo_dict );
 		
 		
 
