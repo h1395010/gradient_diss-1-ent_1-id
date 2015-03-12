@@ -24,10 +24,11 @@ public class GradientDescent
 		  int number_of_files__train = train_freq_count_against_globo_dict.size();
 		  
 		  double[] theta = new double[ globo_dict_size + 1 ];//one for bias
-		  for (int i = 0; i < theta.length; i++) 
+		  for (int i = 0; i < globo_dict_size; i++) 
 		  {
 			  theta[i] = randomNumber(0,1);
 		  }
+		  theta[ globo_dict_size ] = randomNumber(0,1);
 		    
 		  		    
 
@@ -146,15 +147,15 @@ public class GradientDescent
 	      System.out.println( "actual class = " + test_file_true_label[p] );
 	      
 	      //System.out.println();
-	      
-	      if( actual_class == 1.0 && predicted_class == 1.0 )
+	        
+	      if( actual_class > 0 && predicted_class > 0 )
 	    	  tp++;
-	      if( actual_class == 1.0 && predicted_class == -1.0 )
+	      if( actual_class > 0 && predicted_class < 0 )
 	    	  fn++;
-	      if( actual_class == -1.0 && predicted_class == 1.0 )
+	      if( actual_class < 0 && predicted_class > 0 )
 	    	  fp++;
-	      if( actual_class == -1.0 && predicted_class == -1.0 )
-	    	  tn++;   
+	      if( actual_class < 0 && predicted_class < 0 )
+	    	  tn++;  
 	  }
 	  
 	  System.out.println( "tp: " + tp );
