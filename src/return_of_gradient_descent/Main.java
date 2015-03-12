@@ -4,20 +4,16 @@ package return_of_gradient_descent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import com.google.common.collect.Table.Cell;
 
 public class Main 
 {
-	//static String PATH = "/home/matthias/Workbench/SUTD/ISTD_50.570/assignments/data/train";
-	static String PATH = "/home/matthias/Workbench/SUTD/ISTD_50.570/assignments/practice_data/data/train";
+	static String PATH = "/home/matthias/Workbench/SUTD/ISTD_50.570/assignments/data/train";
+	//static String PATH = "/home/matthias/Workbench/SUTD/ISTD_50.570/assignments/practice_data/data/train";
 	
 	//all the words in each file as index, the label as value
 	//static Map< ArrayList<String> , String > train__list_of_file_words = new HashMap<>();
@@ -77,8 +73,8 @@ public class Main
 		for(int cycle = 0; cycle <= 1; cycle++)
 		{			
 			//get the test data
-			//String test_path = "/home/matthias/Workbench/SUTD/ISTD_50.570/assignments/data/test";
-			String test_path = "/home/matthias/Workbench/SUTD/ISTD_50.570/assignments/practice_data/data/test";
+			String test_path = "/home/matthias/Workbench/SUTD/ISTD_50.570/assignments/data/test";
+			//String test_path = "/home/matthias/Workbench/SUTD/ISTD_50.570/assignments/practice_data/data/test";
 			File test_dict = new File( test_path + categories[cycle]);
 
 			EvaluateFiles.store_file_words_with_label( test_dict , GLOBO_DICT , test__list_of_file_words );	

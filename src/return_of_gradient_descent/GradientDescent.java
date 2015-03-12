@@ -69,7 +69,6 @@ public class GradientDescent
 	      hypothesis = calculateHypothesis( theta, feature_matrix__train, p, globo_dict_size );
 
 	      // 2. Calculate the loss = h - y and maybe the squared cost (loss^2)/2m
-	      //cost = hypothesis - outputs__train[p];
 	      cost = HingeLoss.deriv(hypothesis, outputs__train[p]);
 	      
 	      // 3. Calculate the gradient = X' * loss / m
