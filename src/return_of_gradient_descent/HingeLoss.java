@@ -7,7 +7,7 @@ package return_of_gradient_descent;
  *
  * @author Edward Raff
  */
-public class HingeLoss implements LossC
+public class HingeLoss
 {
 
     /**
@@ -37,27 +37,4 @@ public class HingeLoss implements LossC
             return -y;
     }
 
-    @Override
-    public double getLoss(double pred, double y)
-    {
-        return loss(pred, y);
-    }
-
-    @Override
-    public double getDeriv(double pred, double y)
-    {
-        return deriv(pred, y);
-    }
-
-    @Override
-    public double getDeriv2(double pred, double y)
-    {
-        return 0;
-    }
-
-    @Override
-    public double getDeriv2Max()
-    {
-        return 0;
-    }
 }
